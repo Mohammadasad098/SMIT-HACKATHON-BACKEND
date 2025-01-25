@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Datas from "../models/data.models.js";
+import Finances from "../models/data.models.js";
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 import dotenv from "dotenv";
@@ -50,18 +50,22 @@ const uploadImage = async (req, res) => {
 
 
 const addData = (req, res) => {
-  const { title, description } = req.body;
+  const { cnic, reasonForLoan , category , subCatogary , deposit , loanPeriod } = req.body;
 
-  if (!title || !description) {
-    res.status(400).json({
-      message: "title or description required",
-    });
-    return;
-  }
+  if (!cnic) return res.status(400).json({ message: "cnic required" });
+  if (!reasonForLoan) return res.status(400).json({ message: "reasonForLoan required" });
+  if (!category) return res.status(400).json({ message: "category required" });
+  if (!subCatogary) return res.status(400).json({ message: "subCatogary required" });
+  if (!deposit) return res.status(400).json({ message: "deposit required" });
+  if (!loanPeriod) return res.status(400).json({ message: "loanPeriod required" });
 
-  const data = Datas.create({
-    title,
-    description,
+  const finance = Finances.create({
+    cnic,
+    reasonForLoan,
+    category,
+    subCatogary,
+    deposit,
+    loanPeriod,
   });
   res.status(201).json({
     message: "data added to database successfully",
