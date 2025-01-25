@@ -36,3 +36,5 @@ connectDB()
   .catch((err) => {
     console.log("MONGO DB connection failed !!! ", err);
   });
+
+  module.exports = serverless(app);
