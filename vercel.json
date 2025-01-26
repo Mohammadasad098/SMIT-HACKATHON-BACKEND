@@ -10,6 +10,15 @@
       {
         "src": "/(.*)",
         "dest": "/"
+      }, 
+      {
+        "src":"/confirmation-page.html",
+        "dest":"/public/confirmation-page.html"
+      },
+      {
+        "src":"/(.*)",
+        "dest":"index.js"
+
       }
     ]
   }
