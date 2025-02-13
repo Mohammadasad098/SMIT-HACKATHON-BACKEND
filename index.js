@@ -14,11 +14,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: "https://smit-hackathon-frontend-peach.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(cors({ origin: ["http://localhost:5173", "https://smit-hackathon-frontend-peach.vercel.app"] }));
+
 
 app.use(express.json());
 app.use(cookieParser());
