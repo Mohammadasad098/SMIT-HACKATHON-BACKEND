@@ -10,6 +10,7 @@ import dataRoutes from "./src/routes/data.routes.js"
 import guarantorRoutes from "./src/routes/guarantor.routes.js"
 import connectDB from "./src/db/index.js";
 
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -28,6 +29,7 @@ app.use("/api/v1", guarantorRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
 
 
 connectDB()

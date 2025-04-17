@@ -75,7 +75,7 @@ const addData = (req, res) => {
 
 
 const getAllDatas = async (req, res) => {
-  const datas = await Datas.find({});
+  const datas = await Finances.find({});
   res.status(200).json({
     datas: datas,
   });
