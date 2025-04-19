@@ -36,10 +36,6 @@ const guarantorSchema = new Schema(
       type: Number,
       required: true,
     },
-    enrolledUsers: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Users'
-    }
   },
   {
     timestamps: true,
