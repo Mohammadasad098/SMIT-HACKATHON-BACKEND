@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Finances from "../models/data.models.js";
+import User from "../models/user.models.js";
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 import dotenv from "dotenv";
@@ -49,8 +50,8 @@ const uploadImage = async (req, res) => {
 }
 
 
-const addData = (req, res) => {
-  const { cnic, reasonForLoan , category , subCatogary , deposit , loanPeriod } = req.body;
+const addData = async (req, res) => {
+  const { cnic, reasonForLoan, category, subCatogary, deposit, loanPeriod, enrolledUsers } = req.body;
 
   if (!cnic) return res.status(400).json({ message: "cnic required" });
   if (!reasonForLoan) return res.status(400).json({ message: "reasonForLoan required" });
@@ -59,18 +60,35 @@ const addData = (req, res) => {
   if (!deposit) return res.status(400).json({ message: "deposit required" });
   if (!loanPeriod) return res.status(400).json({ message: "loanPeriod required" });
 
-  const finance = Finances.create({
-    cnic,
-    reasonForLoan,
-    category,
-    subCatogary,
-    deposit,
-    loanPeriod,
-  });
-  res.status(201).json({
-    message: "data added to database successfully",
-  });
+  try {
+    const finance = await Finances.create({
+      cnic,
+      reasonForLoan,
+      category,
+      subCatogary,
+      deposit,
+      loanPeriod,
+      enrolledUsers,
+    });
+
+    if (enrolledUsers) {
+      await User.findByIdAndUpdate(enrolledUsers, {
+        $push: { enrolledDatas: finance._id },
+      });
+    }
+
+    return res.status(201).json({
+      message: "Data added to database and enrolledProducts updated successfully",
+      data: finance,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
 };
+
 
 
 

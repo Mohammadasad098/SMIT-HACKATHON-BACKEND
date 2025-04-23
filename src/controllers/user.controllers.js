@@ -83,8 +83,8 @@ const loginUser = async (req, res) => {
     res.json({
       message: "user logged in successfully",
       accessToken,
-      refreshToken,
       data: {
+        userId: user.id,
         userName: user.userName,
         email: user.email,
       },

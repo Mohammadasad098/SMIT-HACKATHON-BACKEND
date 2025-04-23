@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import Guarantors from "../models/guarantor.models.js";
+import User from "../models/user.models.js";
 
 
-
-const addData = (req, res) => {
-  const { name1, email1 , location1 , cnic1 , name2 , email2 , location2 , cnic2 } = req.body;
+const addData = async (req, res) => {
+  const { name1, email1 , location1 , cnic1 , name2 , email2 , location2 , cnic2 , enrolledUsers } = req.body;
 
   if (!name1) return res.status(400).json({ message: "name1 required" });
   if (!email1) return res.status(400).json({ message: "email1 required" });
@@ -15,7 +15,8 @@ const addData = (req, res) => {
   if (!location2) return res.status(400).json({ message: "location2 required" });
   if (!cnic2) return res.status(400).json({ message: "cnic2 required" });
 
-  const finance = Guarantors.create({
+ try{
+  const guarantor = await Guarantors.create({
     name1,
     email1,
     location1,
@@ -23,12 +24,25 @@ const addData = (req, res) => {
     name2,
     email2,
     location2,
-    cnic2
+    cnic2,
+    enrolledUsers,
+  });
+if (enrolledUsers) {
+      await User.findByIdAndUpdate(enrolledUsers, {
+        $push: { enrolledGuarantor: guarantor._id },
+      });
+    }
 
-  });
-  res.status(201).json({
-    message: "data added to database successfully",
-  });
+    return res.status(201).json({
+      message: "Data added to database and enrolledGuarantor updated successfully",
+      data: guarantor,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
 };
 
 
