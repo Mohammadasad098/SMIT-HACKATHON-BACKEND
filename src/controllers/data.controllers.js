@@ -68,7 +68,7 @@ const addData = async (req, res) => {
       subCatogary,
       deposit,
       loanPeriod,
-      enrolledUsers,
+      enrolledUsers: req.body.enrolledUsers
     });
 
     if (enrolledUsers) {
