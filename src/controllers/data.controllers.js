@@ -51,13 +51,14 @@ const uploadImage = async (req, res) => {
 
 
 const addData = async (req, res) => {
-  const { cnic, reasonForLoan, category, subCatogary, deposit, loanPeriod, enrolledUsers } = req.body;
+  const { cnic, reasonForLoan, category, subCatogary, deposit, initialDeposit, loanPeriod, enrolledUsers } = req.body;
 
   if (!cnic) return res.status(400).json({ message: "cnic required" });
   if (!reasonForLoan) return res.status(400).json({ message: "reasonForLoan required" });
   if (!category) return res.status(400).json({ message: "category required" });
   if (!subCatogary) return res.status(400).json({ message: "subCatogary required" });
   if (!deposit) return res.status(400).json({ message: "deposit required" });
+  if (!initialDeposit) return res.status(400).json({ message: "initialDeposit required" });
   if (!loanPeriod) return res.status(400).json({ message: "loanPeriod required" });
 
   try {
@@ -67,10 +68,10 @@ const addData = async (req, res) => {
       category,
       subCatogary,
       deposit,
+      initialDeposit,
       loanPeriod,
       enrolledUsers: req.body.enrolledUsers
     });
-
     if (enrolledUsers) {
       await User.findByIdAndUpdate(enrolledUsers, {
         $push: { enrolledDatas: finance._id },
@@ -102,20 +103,22 @@ const getAllDatas = async (req, res) => {
 const getDataWithId = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "Not valid Id" });
-  }
+  try {
+    const data = await Finances.findOne({ enrolledUsers: id });
 
-  const data = await Datas.findById(id);
-  if (!data) {
-    res.status(404).json({
-      message: "no data found!",
-    });
-    return;
-  }
+    if (!data) {
+      return res.status(404).json({ message: "No data found!" });
+    }
 
-  res.status(200).json(todo);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error fetching finance data:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
+
+
+
 
 
 

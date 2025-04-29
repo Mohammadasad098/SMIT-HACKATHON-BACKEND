@@ -24,6 +24,10 @@ const financeSchema = new Schema(
       type: Number,
       required: true,
     },
+    initialDeposit: {
+      type : Number,
+      required: true
+    },
     loanPeriod: {
       type: Number,
       required: true,
